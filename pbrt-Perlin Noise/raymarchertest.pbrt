@@ -1,0 +1,97 @@
+
+#
+# The following lines define the size of the output image and the name of
+# of the file containing the result of rendering
+#
+Film "image" "string filename" ["raymarchertest.exr"]
+	"integer xresolution" [900] "integer yresolution" [600]
+
+#
+# Sampling specification: PBRT will shoot 4 samples rays per pixel.
+# Increasing the number of samples per pixel will increase image quality
+# at the cost of increased rendering time.  Feel free to crank this value
+# up in your final images.
+#
+
+Sampler "halton" "integer pixelsamples" [100] 
+
+#
+# Integrator specification: PBRT will compute a single bounce of light.
+# Increasing maxdepth increases the bounces of light computed, and will
+# drastically increase the noise of the final image. To decrease noise,
+# increase the pixelsamples of the sampler above
+#
+Integrator "whitted" "integer maxdepth" [4]
+
+#
+# Camera configuration: the camera is located on the Z axis, and is
+# pointed at the center of the scene
+#
+LookAt 0 1.5 7  0 0 0   0 1 0
+Camera "perspective" "float fov" [20]
+
+WorldBegin
+
+#
+# light source configuration:  The next region of the pbrt scene file
+# defines the light sources that illuminate the scene.  Currently the
+# scene is illuminated by a single spotlight source
+#
+#
+# Spotlight source with 60 degree cone angle pointed at the center of
+# the scene
+#
+
+LightSource "spot" "color I" [60 60 60] "point from" [-3, 5, -2] "point to" [-1 0 0] "float coneangle" [35]
+
+LightSource "point" "color I" [40 40 40] "point from" [3.2, 4, -17.5] 
+LightSource "point" "color I" [50 50 50] "point from" [-4, 4, -2]  
+
+LightSource "point" "color I" [90 90 90] "point from" [0 6 2]
+LightSource "distant" "point from" [0 2 30] "point to" [0 0 0]
+
+
+#
+# Arealight (example)
+#
+
+#AttributeBegin
+#  AreaLightSource "area" "color L" [10 10 10]
+  # use camera coordinate system (optional)
+#  CoordSysTransform "camera"
+#  # adjust light source position
+#  Translate 0 0 -2
+#  Rotate 90 1 0 0
+  # define the shape of the arealight to be a disk with radius 1.5
+#  Shape "disk" "float radius" [1.5] 
+#AttributeEnd
+
+
+AttributeBegin
+  Material "matte" "color Kd" [0.67 0.84 2]
+  Shape "waterpool" "float radius" 2 "float amplitude" 2.75 "float frequency" 0.05 "integer octave" 8
+AttributeEnd
+
+AttributeBegin
+  Material "matte" "color Kd" [1 1 0] 
+  Translate 1.75 -0.25 -15
+  Shape "sphere" "float radius" 0.75 
+AttributeEnd
+
+AttributeBegin
+  Material "plastic" 
+  Translate 1.75 0 -4
+  Rotate 30 0 1 0 
+  Shape "disk" "float innerradius" 0.5 "float radius" 0.7
+AttributeEnd
+
+AttributeBegin
+  Material "disney" "color color" [1 0.1 0.5] 
+  Translate -2 -0.1 -8
+  Rotate 90 1 0 0
+  Rotate 75 0 1 0 
+  Shape "cone" "float radius" 0.55 "float height" 2.0
+AttributeEnd
+
+WorldEnd
+
